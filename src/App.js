@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import {Header, Footer} from './components';
+import{NewList, NewDetail} from './components/news/index';
+import { BrowserRouter as Router} from 'react-router-dom';
+import apiGames from './components/conf/api.games';
+import Loading from './components/utili/Loading'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+class App extends Component {
+    constructor(props) {
+    super(props)
+    this.state={
+      games: [],
+      selectedGame:0,
+      loading:false
+   }}
+
+  componentDidMount() {
+    
+    apiGames.get("dates=2020-01-01,2020-12-12&ordering=-added")
+     .then(res => {
+          const games = res.data.results;         
+          this.updateGames(games);
+        })
+      .catch(err => console.log(err));
+  }
+
+ updateGames = (games)=>{
+        this.setState({
+          games,
+          loading:true
+        })
+      }
+  
+  render(){
+    return (
+      <Router>
+        <div className="App">
+          <Header/>
+           { this.state.loading ? (
+              <>
+                <h1 className="d-flex justify-content-center">Home</h1>
+                <div className="d-flex flex-row flex-fill pt-4 p-2" >
+                  <NewList games={this.state.games}/>
+                  <NewDetail/>
+                </div>
+              </>
+            ) : (
+          <Loading />
+            )}
+          
+          <Footer/>
+        </div>
+      </Router>
   );
+  }
+  
 }
 
 export default App;
