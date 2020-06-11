@@ -43,7 +43,7 @@ class App extends Component {
                 <h1 className="d-flex justify-content-center">Home</h1>
                 <div className="d-flex flex-row flex-fill pt-4 p-2" >
                   <NewList games={this.state.games}/>
-                  <NewDetail/>
+                  
                 </div>
               </>
             ) : (
